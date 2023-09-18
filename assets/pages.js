@@ -271,7 +271,7 @@ Pages.home = {
       labels: Data.zonesTop.map(z => z.name),
       values: Data.zonesTop.map(z => z.value),
       colors: [COLORS.red, COLORS.amber, "#f5c542", COLORS.cyan, COLORS.cyan, COLORS.cyan],
-      yMax: 42, yTicks: 8, height: 230, name: "告警数量", format: v => v + " 起",
+      yMax: 42, yTicks: 8, height: 230, name: "告警数量", format: v => v + " 起", barWidth: 34,
       onClick: i => {
         UI.toast("已筛选 " + Data.zonesTop[i].name + " 告警站点", "ok");
         location.hash = "#/alerts";

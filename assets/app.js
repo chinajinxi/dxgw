@@ -76,25 +76,25 @@ const App = (function () {
   const NAV = [
     {
       items: [
-        { key: "home", label: "系统首页" },
-        { key: "network", label: "管网监测" },
-        { key: "pressure", label: "压力监测" },
-        { key: "environment", label: "环境监测" },
-        { key: "alerts", label: "告警管理" },
-        { key: "noise", label: "噪声分析" },
-        { key: "report", label: "安全报告" },
-        { key: "leak", label: "漏水预警" },
-        { key: "info", label: "信息管理" }
+        { key: "home", label: "综合驾驶舱" },
+        { key: "network", label: "管线运行监控" },
+        { key: "pressure", label: "压力工况监视" },
+        { key: "environment", label: "环境参数感知" },
+        { key: "alerts", label: "告警处置中心" },
+        { key: "noise", label: "噪声异响分析" },
+        { key: "report", label: "安全运行报告" },
+        { key: "leak", label: "漏损预警" },
+        { key: "info", label: "台账信息维护" }
       ]
     },
     {
-      group: "后台管理",
+      group: "运维配置",
       items: [
-        { key: "pressureAnalysis", label: "压力分析" },
-        { key: "flowAnalysis", label: "流量分析" },
-        { key: "hammer", label: "水锤分析" },
-        { key: "alertRules", label: "告警规则配置" },
-        { key: "org", label: "组织架构管理" }
+        { key: "pressureAnalysis", label: "压力特性分析" },
+        { key: "flowAnalysis", label: "流量趋势分析" },
+        { key: "hammer", label: "水锤工况分析" },
+        { key: "alertRules", label: "告警策略设置" },
+        { key: "org", label: "组织机构维护" }
       ]
     }
   ];
@@ -126,7 +126,7 @@ const App = (function () {
         '<a class="nav-item' + (it.key === active ? " active" : "") + '" href="#/' + it.key + '" data-nav="' + it.key + '">' + it.label + "</a>"
       ).join("")
     ).join("") +
-      '<div class="sidebar-foot">平台版本 v2.3.1<br>数据更新 2026-09-30<br>交互原型 · 演示数据</div>';
+      '<div class="sidebar-foot">平台版本 v1.0.0<br>交互原型 · 演示数据</div>';
   }
 
   function keyFromHash() {
