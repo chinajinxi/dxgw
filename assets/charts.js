@@ -278,7 +278,7 @@ const Charts = (function () {
       const yMax = cfg.yMax != null ? cfg.yMax : Math.max.apply(null, values) * 1.18;
       const yTicks = cfg.yTicks || 5;
       const slot = iw / n;
-      const barW = Math.min(cfg.barWidth || 26, slot * 0.56);
+      const barW = Math.min(cfg.barWidth || 26, slot * 0.66);
       const Y = v => pad.t + ih - ((v - yMin) / (yMax - yMin || 1)) * ih;
       let out = '<svg viewBox="0 0 ' + w + " " + h + '" width="' + w + '" height="' + h + '">';
       for (let i = 0; i <= yTicks; i++) {
@@ -407,7 +407,7 @@ const Charts = (function () {
       const yMax = cfg.yMax != null ? cfg.yMax : 100;
       const yTicks = cfg.yTicks || 5;
       const slot = iw / n;
-      const barW = Math.min(cfg.barWidth || 28, slot * 0.5);
+      const barW = Math.min(cfg.barWidth || 28, slot * 0.52);
       const Y = v => pad.t + ih - ((v - yMin) / (yMax - yMin || 1)) * ih;
       const X = i => pad.l + slot * i + slot / 2;
       let out = '<svg viewBox="0 0 ' + w + " " + h + '" width="' + w + '" height="' + h + '">';

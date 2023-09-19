@@ -261,6 +261,7 @@ a { color: inherit; }
 .split-b { grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); }
 .split-even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .split-info { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.split-report { grid-template-columns: minmax(0, 0.57fr) minmax(0, 1fr); }
 
 /* ============ Stat cards ============ */
 .stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
@@ -808,6 +809,8 @@ a.text-link:hover, .text-link:hover { color: #9df6ff; text-decoration: underline
 .report-doc .doc-meta { font-size: 10px; color: #6b8799; margin-bottom: 14px; }
 .report-doc h4 { margin: 14px 0 6px; font-size: 12px; color: #9fe9f2; font-weight: 600; }
 .report-doc p { margin: 0; font-size: 12px; line-height: 1.85; color: #a9c2d2; }
+.report-foot { display: flex; justify-content: flex-end; margin-top: 14px; }
+.chart-legend-row { display: flex; padding: 0 2px 8px; }
 
 .remote-head {
   display: flex;
@@ -899,7 +902,7 @@ a.text-link:hover, .text-link:hover { color: #9df6ff; text-decoration: underline
 }
 @media (max-width: 1120px) {
   .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .split-a, .split-b, .split-even, .split-info { grid-template-columns: minmax(0, 1fr); }
+  .split-a, .split-b, .split-even, .split-info, .split-report { grid-template-columns: minmax(0, 1fr); }
   .global-search { width: 190px; }
 }
 @media (max-width: 960px) {

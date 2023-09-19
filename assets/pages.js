@@ -271,7 +271,7 @@ Pages.home = {
       labels: Data.zonesTop.map(z => z.name),
       values: Data.zonesTop.map(z => z.value),
       colors: [COLORS.red, COLORS.amber, "#f5c542", COLORS.cyan, COLORS.cyan, COLORS.cyan],
-      yMax: 42, yTicks: 8, height: 230, name: "告警数量", format: v => v + " 起", barWidth: 34,
+      yMax: 42, yTicks: 8, height: 230, name: "告警数量", format: v => v + " 起", barWidth: 45,
       onClick: i => {
         UI.toast("已筛选 " + Data.zonesTop[i].name + " 告警站点", "ok");
         location.hash = "#/alerts";
@@ -819,7 +819,7 @@ Pages.report = {
         note: '每日 08:00 <button class="switch on" id="autoSwitch" style="margin-left:auto" aria-label="自动生成开关"></button>'
       }) +
       "</div>" +
-      '<div class="grid split-a">' +
+      '<div class="grid split-report">' +
       panel({
         title: "报告列表",
         actions: '<span class="panel-sub">本月 31 份</span>',
@@ -827,14 +827,15 @@ Pages.report = {
       }) +
       panel({
         title: "报告预览",
-        actions: '<button class="btn small" id="reportExport">导出 PDF</button>',
-        body: '<div class="report-preview" id="reportPreview"></div>'
+        body: '<div class="report-preview" id="reportPreview"></div>' +
+          '<div class="report-foot"><button class="btn small" id="reportExport">导出 PDF</button></div>'
       }) +
       "</div>" +
       panel({
         title: "安全指标趋势",
-        actions: legend([{ color: COLORS.green, name: "安全评分" }, { color: "#2b7f96", name: "告警数" }]),
-        body: '<div class="chart-host" id="safetyChart" style="height:236px"></div>'
+        body: '<div class="chart-legend-row">' +
+          legend([{ color: COLORS.green, name: "安全评分" }, { color: "#2b7f96", name: "告警数" }]) +
+          '</div><div class="chart-host" id="safetyChart" style="height:236px"></div>'
       });
   },
   mount(root) {
@@ -888,7 +889,7 @@ Pages.report = {
       lineName: "安全评分",
       barColor: "#1d7c92",
       lineColor: COLORS.green,
-      yMin: 0, yMax: 100, yTicks: 5, height: 236, barWidth: 34
+      yMin: 0, yMax: 80, yTicks: 4, height: 236, barWidth: 120
     });
   }
 };
