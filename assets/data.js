@@ -227,19 +227,6 @@ const Data = {
     { id: "E-11", flow: "76 m³/h", total: "9,204 m³", volt: "3.60 V", level: "0.9 m", temp: "21.2 °C", status: "正常" }
   ],
 
-  /* ---------- 告警分析 ---------- */
-  alertBars: {
-    labels: ["9/24", "9/25", "9/26", "9/27", "9/28", "9/29", "9/30"],
-    values: [32, 41, 35, 52, 46, 53, 47]
-  },
-  alertTypes: [
-    { name: "压力突变", value: 15, color: "#ff5f5f" },
-    { name: "流量异常", value: 12, color: "#f5a623" },
-    { name: "水锤疑似", value: 8, color: "#22c3d6" },
-    { name: "漏损报警", value: 7, color: "#8b7cf6" },
-    { name: "其他", value: 5, color: "#37d399" }
-  ],
-
   /* ---------- 安全报告 ---------- */
   reports: [
     {

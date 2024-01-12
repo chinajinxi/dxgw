@@ -80,7 +80,6 @@ const App = (function () {
         { key: "network", label: "管线运行监控" },
         { key: "pressure", label: "压力工况监视" },
         { key: "environment", label: "环境参数感知" },
-        { key: "alerts", label: "告警处置中心" },
         { key: "noise", label: "噪声异响分析" },
         { key: "report", label: "安全运行报告" },
         { key: "leak", label: "漏损预警" },
@@ -101,7 +100,6 @@ const App = (function () {
   const EXTRA_SEARCH = [
     { key: "info", label: "设备台账", note: "设备信息与远程管理" },
     { key: "leak", label: "漏点定位", note: "漏水预警与定位" },
-    { key: "alerts", label: "告警处置", note: "告警列表与处置" },
     { key: "report", label: "安全月报", note: "报告预览与导出" },
     { key: "flowAnalysis", label: "日流量趋势", note: "近 30 天流量分析" },
     { key: "pressureAnalysis", label: "压力波形分析", note: "毫秒级波形" },

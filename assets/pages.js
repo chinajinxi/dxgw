@@ -255,7 +255,6 @@ Pages.home = {
       }) +
       panel({
         title: "实时告警记录",
-        actions: '<button class="text-link" data-goto="alerts">查看全部</button>',
         body: dataTable(["时间", "站点", "类型", "等级"], alertRows)
       }) +
       "</div>";
@@ -273,8 +272,7 @@ Pages.home = {
       colors: [COLORS.red, COLORS.amber, "#f5c542", COLORS.cyan, COLORS.cyan, COLORS.cyan],
       yMax: 42, yTicks: 8, height: 230, name: "告警数量", format: v => v + " 起", barWidth: 45,
       onClick: i => {
-        UI.toast("已筛选 " + Data.zonesTop[i].name + " 告警站点", "ok");
-        location.hash = "#/alerts";
+        UI.toast("已筛选 " + Data.zonesTop[i].name + " 告警站点（" + Data.zonesTop[i].value + " 起）", "ok");
       }
     });
     bindMapNodes(root, id => {
@@ -649,163 +647,6 @@ Pages.environment = {
 };
 
 /* =========================================================
- * 告警管理
- * ========================================================= */
-Pages.alerts = {
-  _state: { level: "all", q: "", date: null },
-  render() {
-    return '<div class="toolbar">' +
-      '<div class="seg" id="alertLevel">' +
-      '<button data-level="all" class="active">全部</button>' +
-      '<button data-level="紧急">紧急</button>' +
-      '<button data-level="严重">严重</button>' +
-      '<button data-level="一般">一般</button>' +
-      "</div>" +
-      '<input class="input sm" id="alertSearch" placeholder="搜索告警ID / 站点 / 类型" style="width:210px" />' +
-      '<span class="toolbar-label" id="alertFilterInfo"></span>' +
-      '<span class="grow"></span>' +
-      '<button class="btn small" id="alertExport">导出告警</button>' +
-      "</div>" +
-      '<div class="stat-grid">' +
-      statCard({ label: "今日告警", value: "47", note: '较昨日 <b class="down">+6.1%</b>' }) +
-      statCard({ label: "紧急告警", value: "5", note: '<b class="down">需立即处理</b>' }) +
-      statCard({ label: "已处置", value: "38", note: '处理率 <b class="up">80.9%</b>' }) +
-      statCard({ label: "平均处置时长", value: "42", unit: "min", note: '较上月 <b class="up">-8 min</b>' }) +
-      "</div>" +
-      '<div class="grid split-a">' +
-      panel({
-        title: "告警数量分析",
-        actions: legend([{ color: COLORS.cyan, name: "日常" }, { color: COLORS.amber, name: "高峰" }]),
-        body: '<div class="chart-host" id="alertBarChart" style="height:244px"></div>'
-      }) +
-      panel({
-        title: "告警类型分析",
-        actions: '<span class="panel-sub">今日 47 起</span>',
-        body: '<div class="chart-host" id="alertDonut" style="height:244px"></div>'
-      }) +
-      "</div>" +
-      panel({
-        title: '告警明细 <span class="panel-sub" id="alertCount"></span>',
-        actions: '<span class="panel-sub">按时间倒序</span>',
-        body: '<div id="alertTableHost"></div>'
-      });
-  },
-  mount(root) {
-    const state = Pages.alerts._state;
-    const tableHost = root.querySelector("#alertTableHost");
-    const countEl = root.querySelector("#alertCount");
-    const infoEl = root.querySelector("#alertFilterInfo");
-
-    function filtered() {
-      const q = state.q.trim().toLowerCase();
-      return Data.alerts.filter(a =>
-        (state.level === "all" || a.level === state.level) &&
-        (!state.date || a.date === state.date) &&
-        (!q || (a.id + a.site + a.type + a.device).toLowerCase().indexOf(q) >= 0)
-      );
-    }
-    function renderTable() {
-      const list = filtered();
-      countEl.textContent = "共 " + list.length + " 条";
-      if (!list.length) {
-        tableHost.innerHTML = '<div style="padding:34px 0;text-align:center;color:#6d8798;font-size:12px;">暂无符合条件的告警记录</div>';
-        return;
-      }
-      tableHost.innerHTML = dataTable(
-        ["告警ID", "时间", "站点", "类型", "等级", "状态", "操作"],
-        list.map(a => ({
-          attrs: 'class="clickable" data-alert-id="' + a.id + '"',
-          cells: [
-            '<span class="mono">' + a.id + "</span>",
-            '<span class="mono">' + a.day + " " + a.time + "</span>",
-            a.site,
-            '<span class="muted">' + a.type + "</span>",
-            levelHTML(a.level),
-            statusHTML(a.status),
-            '<button class="text-link" data-detail="' + a.id + '">详情</button>'
-          ]
-        }))
-      );
-      tableHost.querySelectorAll("[data-alert-id]").forEach(row => {
-        row.addEventListener("click", ev => {
-          if (ev.target.closest("[data-detail]")) return;
-          openAlertDrawer(row.getAttribute("data-alert-id"));
-        });
-      });
-      tableHost.querySelectorAll("[data-detail]").forEach(btn => {
-        btn.addEventListener("click", ev => {
-          ev.stopPropagation();
-          openAlertDrawer(btn.getAttribute("data-detail"));
-        });
-      });
-    }
-    function renderInfo() {
-      const bits = [];
-      if (state.level !== "all") bits.push("等级：" + state.level);
-      if (state.date) bits.push("日期：" + state.date.replace("-", "/"));
-      if (state.q) bits.push('关键词："' + state.q + '"');
-      if (!bits.length) { infoEl.innerHTML = ""; return; }
-      infoEl.innerHTML = bits.join(" · ") + ' <button class="text-link" id="alertClear">清除</button>';
-      infoEl.querySelector("#alertClear").addEventListener("click", () => {
-        state.level = "all"; state.q = ""; state.date = null;
-        root.querySelector("#alertSearch").value = "";
-        root.querySelectorAll("#alertLevel button").forEach(b => b.classList.toggle("active", b.getAttribute("data-level") === "all"));
-        renderInfo(); renderTable();
-      });
-    }
-
-    Charts.bars(root.querySelector("#alertBarChart"), {
-      labels: Data.alertBars.labels,
-      values: Data.alertBars.values,
-      colors: (i) => i < 3 ? COLORS.cyan : COLORS.amber,
-      yMax: 60, yTicks: 6, height: 244, name: "告警数量", format: v => v + " 起", barWidth: 26,
-      onClick: i => {
-        const day = Data.alertBars.labels[i];
-        const date = "09-" + day.split("/")[1];
-        const hasDetail = Data.alerts.some(a => a.date === date);
-        if (!hasDetail) {
-          UI.toast(day + " 共 " + Data.alertBars.values[i] + " 起告警，明细已归档", "warn");
-          return;
-        }
-        state.date = date;
-        renderInfo(); renderTable();
-        UI.toast("已筛选 " + day + " 的告警", "ok");
-      }
-    });
-    Charts.donut(root.querySelector("#alertDonut"), {
-      data: Data.alertTypes,
-      centerValue: "47",
-      centerLabel: "今日告警",
-      height: 244
-    });
-
-    root.querySelectorAll("#alertLevel button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        state.level = btn.getAttribute("data-level");
-        root.querySelectorAll("#alertLevel button").forEach(b => b.classList.toggle("active", b === btn));
-        renderInfo(); renderTable();
-      });
-    });
-    root.querySelector("#alertSearch").addEventListener("input", e => {
-      state.q = e.target.value;
-      renderInfo(); renderTable();
-    });
-    root.querySelector("#alertExport").addEventListener("click", () => {
-      const list = filtered();
-      const csv = "\ufeff告警ID,日期,时间,站点,类型,等级,状态\n" +
-        list.map(a => [a.id, a.date, a.time, a.site, a.type, a.level, a.status].join(",")).join("\n");
-      downloadFile("告警清单_2026-09-30.csv", csv, "text/csv;charset=utf-8");
-      UI.toast("告警清单已导出（" + list.length + " 条）", "ok");
-    });
-
-    if (state.q) root.querySelector("#alertSearch").value = state.q;
-    root.querySelectorAll("#alertLevel button").forEach(b => b.classList.toggle("active", b.getAttribute("data-level") === state.level));
-    renderInfo();
-    renderTable();
-  }
-};
-
-/* =========================================================
  * 安全报告
  * ========================================================= */
 Pages.report = {
@@ -902,7 +743,7 @@ Pages.leak = {
     return '<div class="stat-grid">' +
       statCard({ label: "漏水概率", value: "78", unit: "%", valueId: "leakProb", noteId: "leakProbNote", note: '<b class="down">A区 疑似漏水</b>' }) +
       statCard({ label: "疑似漏点", value: "3", note: '<b class="warn">待人工复核</b>' }) +
-      statCard({ label: "定位精度", value: "±1.5", unit: "m", note: "算法 v2.3 · 持续学习" }) +
+      statCard({ label: "定位精度", value: "±1.5", unit: "m", note: "算法得出" }) +
       statCard({ label: "今日预警", value: "6", note: '已确认 <b class="up">2</b>' }) +
       "</div>" +
       '<div class="grid split-a">' +
